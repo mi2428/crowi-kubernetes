@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: redis
+  labels:
+    app: redis
+    tier: database
+  namespace: crowi
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: redis
+      labels:
+        app: redis
+        tier: database
+    spec:
+      containers:
+        - name: redis
+          image: redis:latest
+          ports:
+            - name: redis
+              containerPort: 6379
+      nodeSelector:
+        kubernetes.io/hostname: elm

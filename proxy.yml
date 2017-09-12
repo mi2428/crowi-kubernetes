@@ -1,0 +1,49 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: http-https-proxy
+  labels:
+    app: http-https-proxy
+    domain: wiki.d.u.m.m.y.titech.ac.jp
+    tier: frontend
+  namespace: crowi
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: http-https-proxy
+      labels:
+        app: http-https-proxy
+        tier: frontend
+    spec:
+      containers:
+        - name: http-https-proxy
+          image: 10.0.3.1:5000/general/http-https-proxy:stable
+          ports:
+            - name: http
+              containerPort: 80
+            - name: https
+              containerPort: 443
+          volumeMounts:
+            - name: certs
+              mountPath: /etc/nginx/certs
+            - name: acme-challenge
+              mountPath: /var/www/.well-known/acme-challenge
+          env:
+            - name: SERVER_FQDN
+              value: wiki.d.u.m.m.y.titech.ac.jp
+            - name: ADMIN_EMAIL
+              value: net-root@d.u.m.m.y.titech.ac.jp
+            - name: BACKEND_HOST
+              value: crowi.crowi
+            - name: BACKEND_PORT
+              value: "3000"
+      volumes:
+        - name: certs
+          hostPath:
+            path: /var/local/kubernetes/pv/crowi/ssl/certs
+        - name: acme-challenge
+          hostPath:
+            path: /var/local/kubernetes/pv/crowi/ssl/acme-challenge
+      nodeSelector:
+        kubernetes.io/hostname: elm

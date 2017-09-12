@@ -1,0 +1,32 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: mongo
+  labels:
+    app: mongo
+    tier: database
+  namespace: crowi
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: mongo
+      labels:
+        app: mongo
+        tier: database
+    spec:
+      containers:
+        - name: mongo
+          image: mongo:latest
+          ports:
+            - name: mongo
+              containerPort: 27017
+          volumeMounts:
+            - name: mongo
+              mountPath: /data/db
+      volumes:
+        - name: mongo
+          hostPath:
+            path: /var/local/kubernetes/pv/crowi/db
+      nodeSelector:
+        kubernetes.io/hostname: elm

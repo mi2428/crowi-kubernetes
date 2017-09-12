@@ -1,0 +1,3 @@
+= Crowi on Kubernetes
+
+研究室Wikiデプロイ用構成ファイル

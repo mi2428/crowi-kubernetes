@@ -1,0 +1,25 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: elasticsearch
+  labels:
+    app: elasticsearch
+    tier: backend
+  namespace: crowi
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: elasticsearch
+      labels:
+        app: elasticsearch
+        tier: backend
+    spec:
+      containers:
+        - name: elasticsearch
+          image: 10.0.3.1:5000/crowi/crowi-es:5
+          ports:
+            - name: elasticsearch
+              containerPort: 9200
+      nodeSelector:
+        kubernetes.io/hostname: elm

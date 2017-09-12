@@ -1,0 +1,40 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: crowi
+  labels:
+    app: crowi
+    tier: backend
+  namespace: crowi
+spec:
+  replicas: 1
+  template:
+    metadata:
+      name: crowi
+      labels:
+        app: crowi
+        tier: backend
+    spec:
+      containers:
+        - name: crowi
+          image: 10.0.3.1:5000/crowi/crowi:1.6.2
+          ports:
+            - containerPort: 3000
+          volumeMounts:
+            - name: uploads
+              mountPath: /opt/crowi/public/uploads
+          env:
+            - name: DEBUG
+              value: "false"
+            - name: PASSWORD_SEED
+              value: kutreHEwEwaprEsP7f82taTr
+            - name: SECRET_TOKEN
+              value: qesajUvarayUWruqenEkac4a
+            - name: MATHJAX
+              value: "0"
+      volumes:
+        - name: uploads
+          hostPath:
+            path: /var/local/kubernetes/pv/crowi/uploads
+      nodeSelector:
+        kubernetes.io/hostname: elm
